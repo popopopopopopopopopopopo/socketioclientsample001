@@ -8,6 +8,8 @@
 </head>
 <body>
 <input type="text" id="receivedmessage" value="" />
+<button id="start">Start!</button>
+<button id="stop">Stop!</button>
 <input type="text" id="msg" value="Hello from Client!" />
 <button id="send">Send!</button>
 <script src="socket.io.js"></script>
@@ -16,18 +18,35 @@
         var receivedmessage = document.getElementById('receivedmessage'),
             msg = document.getElementById('msg'),
             sendBtn = document.getElementById('send');
-        sendBtn.addEventListener('click', emit, false);
+        sendBtn.addEventListener('click', sendMessageEmit, false);
 
         var socket = io.connect('http://localhost:3000');
 
-        socket.on('myFitstRecieving', function (data) {
+        socket.on('hello', function (data) {
             receivedmessage.value = data.msg;
         });
-
-        function emit(){
-            socket.emit('myFirstSending', {
+        socket.on('myData', function (data) {
+            receivedmessage.value = data.ReqId;
+        });
+        socket.on('myDataArray', function (data) {
+            receivedmessage.value = data[0].ReqId;
+        });
+        function sendMessageEmit() {
+            socket.emit('sendMessage', {
                 msg: msg.value
             });
+        }
+
+        var startbtn = document.getElementById('start'),
+            stopbtn = document.getElementById('stop');
+        startbtn.addEventListener('click', startSendDataEmit, false);
+        stopbtn.addEventListener('click', stopSendDataEmit, false);
+
+        function startSendDataEmit() {
+            socket.emit('startSendData');
+        }
+        function stopSendDataEmit() {
+            socket.emit('stopSendData');
         }
 </script>
 </body>
