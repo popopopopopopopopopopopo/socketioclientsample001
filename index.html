@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello SocketIO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="format-detection" content="telephone=no">
+</head>
+<body>
+<input type="text" id="receivedmessage" value="" />
+<input type="text" id="msg" value="Hello from Client!" />
+<button id="send">Send!</button>
+<script src="socket.io.js"></script>
+<script>
+    // Client side.
+        var receivedmessage = document.getElementById('receivedmessage'),
+            msg = document.getElementById('msg'),
+            sendBtn = document.getElementById('send');
+        sendBtn.addEventListener('click', emit, false);
+
+        var socket = io.connect('http://localhost:3000');
+
+        socket.on('myFitstRecieving', function (data) {
+            receivedmessage.value = data.msg;
+        });
+
+        function emit(){
+            socket.emit('myFirstSending', {
+                msg: msg.value
+            });
+        }
+</script>
+</body>
+</html>
